@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard - Scrumptious Certs</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <nav>
+      <a class="logo-text" href="index.html">Scrumptious Certs</a>
+      <a href="https://sideload.wiki" target="_blank">Docs</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="admin.html">Admin</a>
+      <a href="https://discord.gg/vK7pmqnR" target="_blank">Discord</a>
+    </nav>
+  </header>
+
+  <main class="content fade-in fade-in-delay-1">
+    <h2>Announcements</h2>
+    <div id="announcements"></div>
+
+    <h2>Certificate Status</h2>
+    <div id="certStatus"></div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Scrumptious Certs.</p>
+  </footer>
+
+  <script>
+    fetch('data.json')
+      .then(response => response.json())
+      .then(data => {
+        const annDiv = document.getElementById('announcements');
+        data.announcements.forEach(msg => {
+            const p = document.createElement('p');
+            p.textContent = msg;
+            annDiv.appendChild(p);
+        });
+        document.getElementById('certStatus').textContent = data.certStatus;
+      })
+      .catch(err => {
+        console.error('Error loading data:', err);
+      });
+  </script>
+</body>
+</html>

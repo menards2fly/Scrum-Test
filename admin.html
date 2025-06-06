@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin - Scrumptious Certs</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <nav>
+      <a class="logo-text" href="index.html">Scrumptious Certs</a>
+      <a href="https://sideload.wiki" target="_blank">Docs</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="admin.html">Admin</a>
+      <a href="https://discord.gg/vK7pmqnR" target="_blank">Discord</a>
+    </nav>
+  </header>
+
+  <main class="content fade-in fade-in-delay-1">
+    <h2>Admin Panel</h2>
+    <p>Enter Admin Key to Edit Data:</p>
+    <input type="password" id="adminKey" placeholder="Admin Key" />
+    <button class="button-small" onclick="unlock()">Unlock</button>
+
+    <div id="adminContent" style="display:none; margin-top:20px;">
+      <h3>Edit Announcements (one per line)</h3>
+      <textarea id="annInput" rows="5"></textarea>
+
+      <h3>Edit Certificate Status</h3>
+      <input type="text" id="statusInput" />
+
+      <button class="button-small" onclick="saveData()">Save & Download</button>
+      <p id="statusMsg"></p>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Scrumptious Certs.</p>
+  </footer>
+
+  <script>
+    const ADMIN_KEY = "supersecretkey"; // Change this to your actual key
+
+    function unlock() {
+      const key = document.getElementById('adminKey').value;
+      if (key === ADMIN_KEY) {
+        document.getElementById('adminContent').style.display = 'block';
+        document.getElementById('statusMsg').textContent = '';
+        loadData();
+      } else {
+        document.getElementById('statusMsg').textContent = 'Invalid key.';
+      }
+    }
+
+    function loadData() {
+      fetch('data.json')
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById('annInput').value = data.announcements.join("\n");
+          document.getElementById('statusInput').value = data.certStatus;
+        })
+        .catch(err => {
+          document.getElementById('statusMsg').textContent = 'Error loading data.';
+          console.error(err);
+        });
+    }
+
+    function saveData() {
+      const anns = document.getElementById('annInput').value.split("\n").filter(line => line.trim() !== '');
+      const status = document.getElementById('statusInput').value;
+      const newData = {
+        announcements: anns,
+        certStatus: status
+      };
+      const blob = new Blob([JSON.stringify(newData, null, 4)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'data.json';
+      a.click();
+      URL.revokeObjectURL(url);
+      document.getElementById('statusMsg').textContent = 'Data prepared for download. Replace data.json on your server with this file.';
+    }
+  </script>
+</body>
+</html>
