@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="dashboard.html">Dashboard</a>
+    </nav>
+  </header>
+  <main>
+    <h1>Certificate Dashboard</h1>
+    <div id="announcements"></div>
+    <div id="status"></div>
+  </main>
+  <script>
+    fetch('data.json')
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('announcements').innerText = data.announcements;
+        document.getElementById('status').innerText = data.status;
+      });
+  </script>
+</body>
+</html>
