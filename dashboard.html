@@ -7,25 +7,30 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <header>
-    <nav>
-      <a class="logo-text" href="index.html">Scrumptious Certs</a>
-      <a href="https://sideload.wiki" target="_blank">Docs</a>
+  <header class="header fade-in fade-in-delay-1">
+    <img src="logo.png" alt="Scrumptious Certs Logo" class="logo-img"/>
+    <nav class="nav fade-in fade-in-delay-2">
+      <a href="index.html">Home</a>
       <a href="dashboard.html">Dashboard</a>
+      <a href="https://sideload.wiki" target="_blank">Docs</a>
       <a href="admin.html">Admin</a>
       <a href="https://discord.gg/vK7pmqnR" target="_blank">Discord</a>
     </nav>
   </header>
 
-  <main class="content fade-in fade-in-delay-1">
-    <h2>Announcements</h2>
-    <div id="announcements"></div>
-
-    <h2>Certificate Status</h2>
-    <div id="certStatus"></div>
+  <main class="main fade-in fade-in-delay-3">
+    <h2>Manage Your Certificate</h2>
+    <div class="card fade-in fade-in-delay-4">
+      <h3>Latest Announcement</h3>
+      <div id="announcementBox"></div>
+    </div>
+    <div class="card fade-in fade-in-delay-5">
+      <h3>Certificate Status</h3>
+      <div id="statusBox"></div>
+    </div>
   </main>
 
-  <footer>
+  <footer class="footer fade-in fade-in-delay-6">
     <p>&copy; 2025 Scrumptious Certs.</p>
   </footer>
 
@@ -33,13 +38,13 @@
     fetch('data.json')
       .then(response => response.json())
       .then(data => {
-        const annDiv = document.getElementById('announcements');
+        const annBox = document.getElementById('announcementBox');
         data.announcements.forEach(msg => {
-            const p = document.createElement('p');
-            p.textContent = msg;
-            annDiv.appendChild(p);
+          const p = document.createElement('p');
+          p.textContent = msg;
+          annBox.appendChild(p);
         });
-        document.getElementById('certStatus').textContent = data.certStatus;
+        document.getElementById('statusBox').textContent = data.certStatus;
       })
       .catch(err => {
         console.error('Error loading data:', err);
