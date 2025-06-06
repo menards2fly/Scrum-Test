@@ -1,23 +1,13 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function() {
+    const loader = document.getElementById("loader-wrapper");
+    if (loader) {
+        loader.style.display = "none";
+    }
     const faders = document.querySelectorAll(".fade-in");
-
-    const appearOptions = {
-        threshold: 0.1,
-        rootMargin: "0px 0px -50px 0px"
-    };
-
-    const appearOnScroll = new IntersectionObserver(function (entries, appearOnScroll) {
-        entries.forEach(entry => {
-            if (!entry.isIntersecting) return;
-            entry.target.classList.add("appear");
-            appearOnScroll.unobserve(entry.target);
-        });
-    }, appearOptions);
-
-    faders.forEach(fader => {
-        appearOnScroll.observe(fader);
+    faders.forEach(function(element) {
+        const delay = parseInt(element.getAttribute("data-delay"), 10) || 0;
+        setTimeout(function() {
+            element.classList.add("appear");
+        }, delay);
     });
-
-    const loaderWrapper = document.getElementById("loader-wrapper");
-    if (loaderWrapper) loaderWrapper.style.display = "none";
 });

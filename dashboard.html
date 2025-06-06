@@ -7,9 +7,11 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <header class="header fade-in fade-in-delay-1">
+  <div id="loader-wrapper"><div class="loader"></div></div>
+  <header class="header fade-in" data-delay="200">
     <img src="logo.png" alt="Scrumptious Certs Logo" class="logo-img"/>
-    <nav class="nav fade-in fade-in-delay-2">
+    <h1 class="logo-text">Scrumptious Certs</h1>
+    <nav class="nav fade-in" data-delay="400">
       <a href="index.html">Home</a>
       <a href="dashboard.html">Dashboard</a>
       <a href="https://sideload.wiki" target="_blank">Docs</a>
@@ -18,37 +20,51 @@
     </nav>
   </header>
 
-  <main class="main fade-in fade-in-delay-3">
-    <h2>Manage Your Certificate</h2>
-    <div class="card fade-in fade-in-delay-4">
-      <h3>Latest Announcement</h3>
-      <div id="announcementBox"></div>
-    </div>
-    <div class="card fade-in fade-in-delay-5">
-      <h3>Certificate Status</h3>
-      <div id="statusBox"></div>
-    </div>
+  <main class="main">
+    <section class="fade-in" data-delay="600" style="background:#1a1a1a; padding:20px; border-radius:8px; margin-bottom:20px;">
+      <h2>Announcements</h2>
+      <div id="announcements"></div>
+    </section>
+
+    <section class="fade-in" data-delay="800" style="background:#1a1a1a; padding:20px; border-radius:8px;">
+      <h2>Certificate Status</h2>
+      <div id="certStatus"></div>
+    </section>
   </main>
 
-  <footer class="footer fade-in fade-in-delay-6">
+  <footer class="footer fade-in" data-delay="1000">
     <p>&copy; 2025 Scrumptious Certs.</p>
   </footer>
 
   <script>
-    fetch('data.json')
-      .then(response => response.json())
-      .then(data => {
-        const annBox = document.getElementById('announcementBox');
-        data.announcements.forEach(msg => {
-          const p = document.createElement('p');
-          p.textContent = msg;
-          annBox.appendChild(p);
+    document.addEventListener("DOMContentLoaded", function() {
+      const loader = document.getElementById("loader-wrapper");
+      if (loader) {
+        loader.style.display = "none";
+      }
+      fetch('data.json')
+        .then(response => response.json())
+        .then(data => {
+          const annDiv = document.getElementById('announcements');
+          data.announcements.forEach(msg => {
+            const p = document.createElement('p');
+            p.textContent = msg;
+            annDiv.appendChild(p);
+          });
+          document.getElementById('certStatus').textContent = data.certStatus;
+        })
+        .catch(err => {
+          console.error('Error loading data:', err);
         });
-        document.getElementById('statusBox').textContent = data.certStatus;
-      })
-      .catch(err => {
-        console.error('Error loading data:', err);
+      // Fade-in logic reused from script.js
+      const faders = document.querySelectorAll(".fade-in");
+      faders.forEach(function(element) {
+        const delay = parseInt(element.getAttribute("data-delay"), 10) || 0;
+        setTimeout(function() {
+          element.classList.add("appear");
+        }, delay);
       });
+    });
   </script>
 </body>
 </html>
