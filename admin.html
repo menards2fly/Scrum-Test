@@ -1,105 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Admin - Scrumptious Certs</title>
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-  <header class="header">
-    <img src="logo.png" alt="Scrumptious Certs Logo" class="logo-img"/>
-    <h1 class="logo-text">Scrumptious Certs</h1>
-    <nav class="nav">
-      <a href="index.html">Home</a>
-      <a href="dashboard.html">Dashboard</a>
-      <a href="https://sideload.wiki" target="_blank">Docs</a>
-      <a href="admin.html">Admin</a>
-      <a href="https://discord.gg/vK7pmqnR" target="_blank">Discord</a>
-    </nav>
-  </header>
-
-  <main class="content fade-in" data-delay="200">
-    <h2>Admin Panel</h2>
-    <p>Enter Admin Key to Edit Data:</p>
-    <input type="password" id="adminKey" placeholder="Admin Key" />
-    <button class="button-small" onclick="unlock()">Unlock</button>
-
-    <div id="adminContent" style="display:none; margin-top:20px;">
-      <h3>Target Username (leave blank for all users)</h3>
-      <input type="text" id="targetUser" placeholder="username or 'all'" />
-
-      <h3>Edit Announcements (one per line)</h3>
-      <textarea id="annInput" rows="5"></textarea>
-
-      <h3>Edit Certificate Status</h3>
-      <input type="text" id="statusInput" />
-
-      <button class="button-small" onclick="saveData()">Save & Download</button>
-      <p id="statusMsg"></p>
-    </div>
-  </main>
-
-  <footer>
-    <p>&copy; 2025 Scrumptious Certs.</p>
-  </footer>
-
-  <script>
-    const ADMIN_KEY = "supersecretkey"; // Change as needed
-
-    function unlock() {
-      const key = document.getElementById('adminKey').value;
-      if (key === ADMIN_KEY) {
-        document.getElementById('adminContent').style.display = 'block';
-        document.getElementById('statusMsg').textContent = '';
-        loadData();
-      } else {
-        document.getElementById('statusMsg').textContent = 'Invalid key.';
-      }
-    }
-
-    function loadData() {
-      fetch('data.json')
-        .then(response => response.json())
-        .then(data => {
-          const target = document.getElementById('targetUser').value.trim() || 'all';
-          const anns = data.announcements[target] || [];
-          document.getElementById('annInput').value = anns.join("\n");
-          document.getElementById('statusInput').value = data.certStatus[target] || '';
-        })
-        .catch(err => {
-          document.getElementById('statusMsg').textContent = 'Error loading data.';
-          console.error(err);
-        });
-    }
-
-    function saveData() {
-      const target = document.getElementById('targetUser').value.trim() || 'all';
-      const anns = document.getElementById('annInput').value.split("\n").filter(line => line.trim() !== '');
-      const status = document.getElementById('statusInput').value;
-
-      fetch('data.json')
-        .then(response => response.json())
-        .then(data => {
-          // Initialize if missing
-          data.announcements = data.announcements || {};
-          data.certStatus = data.certStatus || {};
-          data.announcements[target] = anns;
-          data.certStatus[target] = status;
-          const blob = new Blob([JSON.stringify(data, null, 4)], { type: 'application/json' });
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = 'data.json';
-          a.click();
-          URL.revokeObjectURL(url);
-          document.getElementById('statusMsg').textContent = 'Data prepared for download. Replace data.json on your server.';
-        })
-        .catch(err => {
-          document.getElementById('statusMsg').textContent = 'Error saving data.';
-          console.error(err);
-        });
-    }
-  </script>
-</body>
-</html>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><title>Admin</title><link href="styles.css" rel="stylesheet"/></head><body>
+<header><img src="logo.png" class="logo-img"/><nav id="main-nav" class="nav"></nav></header>
+<div class="container main">
+  <h2>Admin Panel</h2><input type="password" id="k"/><button onclick="u()">Unlock</button><div id="c" style="display:none;margin-top:20px;">
+    <input id="t" placeholder="username or all"/><textarea id="a" rows="5"></textarea><input id="s"/><button onclick="sd()">Save & Download</button><p id="m"></p>
+  </div>
+</div>
+<script>
+document.querySelector('header').insertAdjacentHTML('beforeend','<script>...nav script...</script>');
+function u(){if(k.value==='supersecretkey'){c.style.display='block';ld();}else m.textContent='Invalid';}
+function ld(){fetch('data.json').then(r=>r.json()).then(d=>{a.value=(d.announcements[t.value||'all']||[]).join("\n");s.value=d.certStatus[t.value||'all']||'';});}
+function sd(){fetch('data.json').then(r=>r.json()).then(d=>{var target=t.value||'all',anns=a.value.split("\n"),stat=s.value;d.announcements[target]=anns;d.certStatus[target]=stat;var b=new Blob([JSON.stringify(d,null,4)],{type:'application/json'}),url=URL.createObjectURL(b),dl=document.createElement('a');dl.href=url;dl.download='data.json';dl.click();URL.revokeObjectURL(url);m.textContent='Download ready';});}
+</script>
+</body></html>

@@ -1,84 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dashboard - Scrumptious Certs</title>
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-  <div id="loader-wrapper"><div class="loader"></div></div>
-  <header class="header fade-in" data-delay="200">
-    <img src="logo.png" alt="Scrumptious Certs Logo" class="logo-img"/>
-    <h1 class="logo-text">Scrumptious Certs</h1>
-    <nav class="nav fade-in" data-delay="400">
-      <a href="index.html">Home</a>
-      <a href="dashboard.html">Dashboard</a>
-      <a href="https://sideload.wiki" target="_blank">Docs</a>
-      <a href="admin.html">Admin</a>
-      <a href="https://discord.gg/vK7pmqnR" target="_blank">Discord</a>
-      <a href="#" id="logoutLink" style="display:none;">Logout</a>
-    </nav>
-  </header>
-
-  <main class="main fade-in" data-delay="600">
-    <h2>Your Announcements</h2>
-    <div id="announcements"></div>
-
-    <h2>Your Certificate Status</h2>
-    <div id="certStatus"></div>
-  </main>
-
-  <footer class="footer fade-in" data-delay="800">
-    <p>&copy; 2025 Scrumptious Certs.</p>
-  </footer>
-
-  <script>
-    // Redirect to login if not authenticated
-    const user = localStorage.getItem("authUser");
-    if (!user) {
-      window.location.href = "login.html";
-    }
-
-    document.getElementById("logoutLink").style.display = "inline";
-    document.getElementById("logoutLink").addEventListener("click", function(e) {
-      e.preventDefault();
-      localStorage.removeItem("authUser");
-      window.location.href = "login.html";
-    });
-
-    document.addEventListener("DOMContentLoaded", function() {
-      const loader = document.getElementById("loader-wrapper");
-      if (loader) {
-        loader.style.display = "none";
-      }
-      fetch('data.json')
-        .then(response => response.json())
-        .then(data => {
-          const username = localStorage.getItem("authUser");
-          const allAnns = data.announcements.all || [];
-          const userAnns = data.announcements[username] || [];
-          const annDiv = document.getElementById('announcements');
-          allAnns.concat(userAnns).forEach(msg => {
-            const p = document.createElement('p');
-            p.textContent = msg;
-            annDiv.appendChild(p);
-          });
-          const status = data.certStatus[username] || "No status available.";
-          document.getElementById('certStatus').textContent = status;
-        })
-        .catch(err => {
-          console.error('Error loading data:', err);
-        });
-      // Fade-in logic
-      const faders = document.querySelectorAll(".fade-in");
-      faders.forEach(function(element) {
-        const delay = parseInt(element.getAttribute("data-delay"), 10) || 0;
-        setTimeout(function() {
-          element.classList.add("appear");
-        }, delay);
-      });
-    });
-  </script>
-</body>
-</html>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><title>Dashboard</title><link href="styles.css" rel="stylesheet"/></head><body>
+<div id="loader-wrapper"><div class="loader"></div></div>
+<header><img src="logo.png" class="logo-img"/><nav id="main-nav" class="nav"></nav></header>
+<div class="container main fade-in" data-delay="600">
+  <h2>Your Announcements</h2><div id="ann"></div>
+  <h2>Your Certificate Status</h2><div id="stat"></div>
+  <section class="fade-in" data-delay="1000" style="display:flex;gap:20px;margin-top:20px;">
+    <div class="card"><h3>Device Status</h3><p id="dev">None</p></div>
+    <div class="card"><h3>Download Certificates</h3><a href="your_certificates.zip" class="order-button">Download Now</a></div>
+  </section>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+  const nav=document.getElementById('main-nav'),u=localStorage.getItem('authUser'),links='';
+  // dynamic nav same as index
+  var lk='';lk+='<a href="index.html">Home</a>';
+  if(u){lk+='<a href="dashboard.html">Dashboard</a><a href="#" id="logout">Logout</a>';}
+  else{lk+='<a href="login.html">Login</a><a href="signup.html">Sign Up</a>';}
+  lk+='<a href="https://sideload.wiki" target="_blank">Docs</a><a href="admin.html">Admin</a><a href="https://discord.gg/vK7pmqnR" target="_blank">Discord</a>';
+  nav.innerHTML=lk;document.getElementById('logout')?.addEventListener('click',()=>{localStorage.removeItem('authUser');location='index.html';});
+  document.getElementById('loader-wrapper').style.display='none';
+  fetch('data.json').then(r=>r.json()).then(d=>{
+    var a=d.announcements.all.concat(d.announcements[u]||[]);a.forEach(m=>ann.appendChild(Object.assign(document.createElement('p'),{textContent:m})));
+    stat.textContent=d.certStatus[u]||d.certStatus.all;
+  });
+  document.querySelectorAll('.fade-in').forEach(el=>setTimeout(()=>el.classList.add('appear'),el.dataset.delay));
+});
+</script>
+</body></html>
