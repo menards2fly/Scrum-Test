@@ -19,13 +19,16 @@
     </nav>
   </header>
 
-  <main class="content">
+  <main class="content fade-in" data-delay="200">
     <h2>Admin Panel</h2>
     <p>Enter Admin Key to Edit Data:</p>
     <input type="password" id="adminKey" placeholder="Admin Key" />
     <button class="button-small" onclick="unlock()">Unlock</button>
 
     <div id="adminContent" style="display:none; margin-top:20px;">
+      <h3>Target Username (leave blank for all users)</h3>
+      <input type="text" id="targetUser" placeholder="username or 'all'" />
+
       <h3>Edit Announcements (one per line)</h3>
       <textarea id="annInput" rows="5"></textarea>
 
@@ -42,7 +45,7 @@
   </footer>
 
   <script>
-    const ADMIN_KEY = "supersecretkey"; // Change this to your actual key
+    const ADMIN_KEY = "supersecretkey"; // Change as needed
 
     function unlock() {
       const key = document.getElementById('adminKey').value;
@@ -59,8 +62,10 @@
       fetch('data.json')
         .then(response => response.json())
         .then(data => {
-          document.getElementById('annInput').value = data.announcements.join("\n");
-          document.getElementById('statusInput').value = data.certStatus;
+          const target = document.getElementById('targetUser').value.trim() || 'all';
+          const anns = data.announcements[target] || [];
+          document.getElementById('annInput').value = anns.join("\n");
+          document.getElementById('statusInput').value = data.certStatus[target] || '';
         })
         .catch(err => {
           document.getElementById('statusMsg').textContent = 'Error loading data.';
@@ -69,20 +74,31 @@
     }
 
     function saveData() {
+      const target = document.getElementById('targetUser').value.trim() || 'all';
       const anns = document.getElementById('annInput').value.split("\n").filter(line => line.trim() !== '');
       const status = document.getElementById('statusInput').value;
-      const newData = {
-        announcements: anns,
-        certStatus: status
-      };
-      const blob = new Blob([JSON.stringify(newData, null, 4)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'data.json';
-      a.click();
-      URL.revokeObjectURL(url);
-      document.getElementById('statusMsg').textContent = 'Data prepared for download. Replace data.json on your server with this file.';
+
+      fetch('data.json')
+        .then(response => response.json())
+        .then(data => {
+          // Initialize if missing
+          data.announcements = data.announcements || {};
+          data.certStatus = data.certStatus || {};
+          data.announcements[target] = anns;
+          data.certStatus[target] = status;
+          const blob = new Blob([JSON.stringify(data, null, 4)], { type: 'application/json' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'data.json';
+          a.click();
+          URL.revokeObjectURL(url);
+          document.getElementById('statusMsg').textContent = 'Data prepared for download. Replace data.json on your server.';
+        })
+        .catch(err => {
+          document.getElementById('statusMsg').textContent = 'Error saving data.';
+          console.error(err);
+        });
     }
   </script>
 </body>

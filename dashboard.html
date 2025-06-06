@@ -17,26 +17,36 @@
       <a href="https://sideload.wiki" target="_blank">Docs</a>
       <a href="admin.html">Admin</a>
       <a href="https://discord.gg/vK7pmqnR" target="_blank">Discord</a>
+      <a href="#" id="logoutLink" style="display:none;">Logout</a>
     </nav>
   </header>
 
-  <main class="main">
-    <section class="fade-in" data-delay="600" style="background:#1a1a1a; padding:20px; border-radius:8px; margin-bottom:20px;">
-      <h2>Announcements</h2>
-      <div id="announcements"></div>
-    </section>
+  <main class="main fade-in" data-delay="600">
+    <h2>Your Announcements</h2>
+    <div id="announcements"></div>
 
-    <section class="fade-in" data-delay="800" style="background:#1a1a1a; padding:20px; border-radius:8px;">
-      <h2>Certificate Status</h2>
-      <div id="certStatus"></div>
-    </section>
+    <h2>Your Certificate Status</h2>
+    <div id="certStatus"></div>
   </main>
 
-  <footer class="footer fade-in" data-delay="1000">
+  <footer class="footer fade-in" data-delay="800">
     <p>&copy; 2025 Scrumptious Certs.</p>
   </footer>
 
   <script>
+    // Redirect to login if not authenticated
+    const user = localStorage.getItem("authUser");
+    if (!user) {
+      window.location.href = "login.html";
+    }
+
+    document.getElementById("logoutLink").style.display = "inline";
+    document.getElementById("logoutLink").addEventListener("click", function(e) {
+      e.preventDefault();
+      localStorage.removeItem("authUser");
+      window.location.href = "login.html";
+    });
+
     document.addEventListener("DOMContentLoaded", function() {
       const loader = document.getElementById("loader-wrapper");
       if (loader) {
@@ -45,18 +55,22 @@
       fetch('data.json')
         .then(response => response.json())
         .then(data => {
+          const username = localStorage.getItem("authUser");
+          const allAnns = data.announcements.all || [];
+          const userAnns = data.announcements[username] || [];
           const annDiv = document.getElementById('announcements');
-          data.announcements.forEach(msg => {
+          allAnns.concat(userAnns).forEach(msg => {
             const p = document.createElement('p');
             p.textContent = msg;
             annDiv.appendChild(p);
           });
-          document.getElementById('certStatus').textContent = data.certStatus;
+          const status = data.certStatus[username] || "No status available.";
+          document.getElementById('certStatus').textContent = status;
         })
         .catch(err => {
           console.error('Error loading data:', err);
         });
-      // Fade-in logic reused from script.js
+      // Fade-in logic
       const faders = document.querySelectorAll(".fade-in");
       faders.forEach(function(element) {
         const delay = parseInt(element.getAttribute("data-delay"), 10) || 0;

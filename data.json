@@ -1,6 +1,10 @@
 {
-    "announcements": [
-        "Welcome to Scrumptious Certs! Now offering instant delivery options."
-    ],
-    "certStatus": "All systems operational. Certs are active and stable."
+    "announcements": {
+        "all": [
+            "Welcome to Scrumptious Certs!"
+        ]
+    },
+    "certStatus": {
+        "all": "No certificates purchased yet."
+    }
 }

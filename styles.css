@@ -29,6 +29,7 @@ header {
     height: auto;
     display: block;
     margin: 0 auto 20px;
+    border-radius: 50%;
 }
 
 .logo-text {
@@ -167,3 +168,37 @@ a:hover {
     transform: translateY(0) !important;
     transition: opacity 0.6s ease-out, transform 0.6s ease-out;
 }
+
+/* Input/button styles for login/signup/admin */
+.container input, .container textarea, button {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #333;
+    border-radius: 5px;
+    background: #1e1e1e;
+    color: #fff;
+}
+
+button {
+    background-color: #e50914;
+    border: none;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+button:hover {
+    background-color: #ff1f2f;
+}
+
+.button-small {
+    display: inline-block;
+    background: #e50914;
+    color: #fff;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 8px;
+}
+

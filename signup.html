@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign Up - Scrumptious Certs</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container fade-in" data-delay="200">
+    <h2>Sign Up</h2>
+    <input type="text" id="newUser" placeholder="Choose a username" />
+    <input type="password" id="newPass" placeholder="Choose a password" />
+    <button onclick="signup()">Sign Up</button>
+    <p id="signupMsg"></p>
+    <p>Already have an account? <a href="login.html">Login</a></p>
+  </div>
+  <script>
+    function signup() {
+      const u = document.getElementById("newUser").value.trim();
+      const p = document.getElementById("newPass").value;
+      if (!u || !p) {
+        document.getElementById("signupMsg").textContent = "Enter both fields.";
+        return;
+      }
+      if (localStorage.getItem("user_" + u)) {
+        document.getElementById("signupMsg").textContent = "Username taken.";
+        return;
+      }
+      localStorage.setItem("user_" + u, p);
+      document.getElementById("signupMsg").textContent = "Account created! Redirecting to login...";
+      setTimeout(() => { window.location.href = "login.html"; }, 1000);
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+      const faders = document.querySelectorAll(".fade-in");
+      faders.forEach(function(element) {
+        const delay = parseInt(element.getAttribute("data-delay"), 10) || 0;
+        setTimeout(function() {
+          element.classList.add("appear");
+        }, delay);
+      });
+    });
+  </script>
+</body>
+</html>
