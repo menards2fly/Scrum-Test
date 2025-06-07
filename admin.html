@@ -16,15 +16,19 @@
   <input type="password" id="adminKey" placeholder="Admin Key" />
   <button onclick="unlock()">Unlock</button>
   <div id="adminContent" style="display:none;margin-top:20px;">
-    <input id="targetUser" placeholder="Username (or 'all')" /><br/>
-    <label>Announcements:</label>
-    <textarea id="annInput" rows="4"></textarea>
-    <label>Certificate Status:</label>
-    <input id="statusInput" />
-    <label>Device Status:</label>
-    <input id="deviceInput" />
-    <label>Download Link:</label>
-    <input id="linkInput" />
+    <input id="targetUser" placeholder="Username (leave blank for global announcement)" /><br/>
+    <div id="annBlock">
+      <label>Announcements (global only):</label>
+      <textarea id="annInput" rows="4"></textarea>
+    </div>
+    <div id="userOnlyFields">
+      <label>Certificate Status:</label>
+      <input id="statusInput" />
+      <label>Device Status:</label>
+      <input id="deviceInput" />
+      <label>Download Link:</label>
+      <input id="linkInput" />
+    </div>
     <button onclick="saveData()">Save</button>
     <p id="statusMsg"></p>
   </div>
@@ -37,7 +41,6 @@ function unlock() {
   const key = document.getElementById("adminKey").value;
   if (key === ADMIN_KEY) {
     document.getElementById("adminContent").style.display = "block";
-    document.getElementById("statusMsg").textContent = "";
     loadData();
   } else {
     document.getElementById("statusMsg").textContent = "Invalid key.";
@@ -49,20 +52,32 @@ function loadData() {
     .then(r => r.json())
     .then(d => {
       db = d;
-      const user = document.getElementById("targetUser").value || "all";
-      document.getElementById("annInput").value = (d.announcements[user] || []).join("\n");
-      document.getElementById("statusInput").value = d.certStatus[user] || "";
-      document.getElementById("deviceInput").value = d.deviceStatus[user] || "";
-      document.getElementById("linkInput").value = d.certDownloadLink[user] || "";
+      const user = document.getElementById("targetUser").value.trim();
+      if (!user) {
+        document.getElementById("annBlock").style.display = "block";
+        document.getElementById("userOnlyFields").style.display = "none";
+        document.getElementById("annInput").value = (db.announcements["all"] || []).join("\n");
+      } else {
+        document.getElementById("annBlock").style.display = "none";
+        document.getElementById("userOnlyFields").style.display = "block";
+        document.getElementById("statusInput").value = db.certStatus[user] || "";
+        document.getElementById("deviceInput").value = db.deviceStatus[user] || "";
+        document.getElementById("linkInput").value = db.certDownloadLink[user] || "";
+      }
     });
 }
 
+document.getElementById("targetUser").addEventListener("input", loadData);
+
 function saveData() {
-  const user = document.getElementById("targetUser").value || "all";
-  db.announcements[user] = document.getElementById("annInput").value.split("\n");
-  db.certStatus[user] = document.getElementById("statusInput").value;
-  db.deviceStatus[user] = document.getElementById("deviceInput").value;
-  db.certDownloadLink[user] = document.getElementById("linkInput").value;
+  const user = document.getElementById("targetUser").value.trim();
+  if (!user) {
+    db.announcements["all"] = document.getElementById("annInput").value.split("\n");
+  } else {
+    db.certStatus[user] = document.getElementById("statusInput").value;
+    db.deviceStatus[user] = document.getElementById("deviceInput").value;
+    db.certDownloadLink[user] = document.getElementById("linkInput").value;
+  }
   const blob = new Blob([JSON.stringify(db, null, 2)], {type: "application/json"});
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
@@ -70,7 +85,7 @@ function saveData() {
   a.download = "data.json";
   a.click();
   URL.revokeObjectURL(url);
-  document.getElementById("statusMsg").textContent = "Download ready. Replace the data.json file on your site.";
+  document.getElementById("statusMsg").textContent = "Data saved. Replace your data.json on server.";
 }
 </script>
 <script src="script.js"></script>
