@@ -1,17 +1,19 @@
 {
-    "announcements": {
-        "all": [
-            "Welcome to Scrumptious Certs!",
-            "Now with user-specific updates."
-        ]
-    },
-    "certStatus": {
-        "all": "All systems operational."
-    },
-    "deviceStatus": {
-        "all": "No devices registered."
-    },
-    "certDownloadLink": {
-        "all": "your_certificates.zip"
-    }
+  "announcements": {
+    "all": [
+      "Welcome to Scrumptious Certs!"
+    ]
+  },
+  "certStatus": {
+    "all": "All systems operational.",
+    "menards2fly": "Pending"
+  },
+  "deviceStatus": {
+    "all": "No devices registered.",
+    "menards2fly": "UDID, Verified"
+  },
+  "certDownloadLink": {
+    "all": "your_certificates.zip",
+    "menards2fly": "https://www.google.com/"
+  }
 }
