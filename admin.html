@@ -26,6 +26,8 @@
     <label>Device Status:</label>
     <input id="deviceInput" />
     <label>Download Link:</label>
+<input id="expireInput" placeholder="YYYY-MM-DD" />
+<label>Cert Expiration Date:</label>
     <input id="linkInput" />
     <button onclick="saveUserData()">Save User Settings</button>
     <p id="statusMsg"></p>
@@ -69,6 +71,8 @@ function saveUserData() {
   db.certStatus[user] = document.getElementById("statusInput").value;
   db.deviceStatus[user] = document.getElementById("deviceInput").value;
   db.certDownloadLink[user] = document.getElementById("linkInput").value;
+  db.certExpires = db.certExpires || {};
+  db.certExpires[user] = document.getElementById("expireInput").value;
 
   saveJSON();
 }
