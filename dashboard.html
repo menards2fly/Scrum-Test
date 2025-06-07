@@ -16,7 +16,21 @@
           const now = new Date();
           const diffTime = end - now;
           const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-          certCountdown.textContent = diffDays > 0 ? diffDays + " day(s) left" : "Expired";
+          
+        const exp = d.certExpires[u] || d.certExpires.all;
+        let days = "N/A";
+        if (exp) {
+          const end = new Date(exp);
+          const now = new Date();
+          const diffTime = end - now;
+          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+          days = diffDays > 0 ? diffDays + " day(s) left" : "Expired";
+        }
+        const el1 = document.getElementById("certCountdown");
+        const el2 = document.getElementById("certDaysTop");
+        if (el1) el1.textContent = days;
+        if (el2) el2.textContent = days;
+
         document.getElementById("certDaysTop").textContent = certCountdown.textContent;
         } else {
           certCountdown.textContent = "N/A";
