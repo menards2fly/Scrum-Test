@@ -1,21 +1,24 @@
 {
   "announcements": {
     "all": [
-      "Welcome to Scrumptious Certs!",
-      "Now with user-specific updates."
+      "Welcome to Scrumptious Certs!"
     ]
   },
   "certStatus": {
-    "all": "All systems operational."
+    "all": "All systems operational.",
+    "menards2fly": "Good"
   },
   "deviceStatus": {
-    "all": "No devices registered."
+    "all": "No devices registered.",
+    "menards2fly": "Enrolled"
   },
   "certDownloadLink": {
-    "all": "your_certificates.zip"
+    "all": "your_certificates.zip",
+    "menards2fly": ""
   },
   "certExpires": {
     "all": "2025-08-06",
-    "user1": "2025-06-22"
+    "user1": "2025-06-22",
+    "menards2fly": "2000-12-12"
   }
 }
