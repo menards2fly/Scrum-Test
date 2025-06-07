@@ -1,14 +1,1 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><title>Admin</title><link href="styles.css" rel="stylesheet"/></head><body>
-<header><img src="logo.png" class="logo-img"/><nav id="main-nav" class="nav"></nav></header>
-<div class="container main">
-  <h2>Admin Panel</h2><input type="password" id="k"/><button onclick="u()">Unlock</button><div id="c" style="display:none;margin-top:20px;">
-    <input id="t" placeholder="username or all"/><textarea id="a" rows="5"></textarea><input id="s"/><button onclick="sd()">Save & Download</button><p id="m"></p>
-  </div>
-</div>
-<script>
-document.querySelector('header').insertAdjacentHTML('beforeend','<script>...nav script...</script>');
-function u(){if(k.value==='supersecretkey'){c.style.display='block';ld();}else m.textContent='Invalid';}
-function ld(){fetch('data.json').then(r=>r.json()).then(d=>{a.value=(d.announcements[t.value||'all']||[]).join("\n");s.value=d.certStatus[t.value||'all']||'';});}
-function sd(){fetch('data.json').then(r=>r.json()).then(d=>{var target=t.value||'all',anns=a.value.split("\n"),stat=s.value;d.announcements[target]=anns;d.certStatus[target]=stat;var b=new Blob([JSON.stringify(d,null,4)],{type:'application/json'}),url=URL.createObjectURL(b),dl=document.createElement('a');dl.href=url;dl.download='data.json';dl.click();URL.revokeObjectURL(url);m.textContent='Download ready';});}
-</script>
-</body></html>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><title>Admin</title><link href="styles.css" rel="stylesheet"/></head><body><header><img src="logo.png" class="logo-img"/><nav id="main-nav" class="nav"></nav></header><div class="container main"><h2>Admin Panel</h2><input type="password" id="k"/><button onclick="u()">Unlock</button><div id="c" style="display:none;"><input id="t" placeholder="username or all"/><textarea id="a"></textarea><input id="s"/><button onclick="sd()">Save & Download</button><p id="m"></p></div></div><script src="script.js"></script><script>function u(){if(k.value==='supersecretkey'){c.style.display='block';fetch('data.json').then(r=>r.json()).then(d=>{a.value=(d.announcements[t.value||'all']||[]).join('\n');s.value=d.certStatus[t.value||'all']||'';});}else m.textContent='Invalid';}function sd(){fetch('data.json').then(r=>r.json()).then(d=>{var tval=t.value||'all';d.announcements[tval]=a.value.split('\n');d.certStatus[tval]=s.value;d.deviceStatus[tval]=d.deviceStatus[tval]||'';d.certDownloadLink[tval]=d.certDownloadLink[tval]||d.certDownloadLink.all;var blob=new Blob([JSON.stringify(d,null,4)],{type:'application/json'}),url=URL.createObjectURL(blob),dl=document.createElement('a');dl.href=url;dl.download='data.json';dl.click();URL.revokeObjectURL(url);m.textContent='Download ready';});}</script></body></html>
