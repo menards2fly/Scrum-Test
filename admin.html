@@ -25,16 +25,16 @@
     <input id="statusInput" />
     <label>Device Status:</label>
     <input id="deviceInput" />
-    <label>Download Link:</label>
+    <label>Cert Expiration Date:</label>
 <input id="expireInput" placeholder="YYYY-MM-DD" />
-<label>Cert Expiration Date:</label>
+<label>Download Link:</label>
     <input id="linkInput" />
     <button onclick="saveUserData()">Save User Settings</button>
     <p id="statusMsg"></p>
   </div>
 </div>
 <script>
-const ADMIN_KEY = "supersecretkey";
+const ADMIN_KEY = "key";
 let db = {};
 
 function unlock() {
